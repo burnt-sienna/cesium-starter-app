@@ -157,7 +157,7 @@ prev north 8657 &#8593;-->
   <script>
 function startUp(Cesium){
     //var viewer = new Cesium.Viewer('cesiumContainer');
-       
+          alert('starup start');  
     var vertExag = 1.0;
     var vertExagMax = 1.5;
     var myCount = 0;
@@ -174,10 +174,9 @@ function startUp(Cesium){
     });
 
 
-    alert('1');
+
     var viewer = createViewer(viewer,vertExag);
 
-alert('2');
 
 var imageryLayers = viewer.imageryLayers;
 //displayLoading();
