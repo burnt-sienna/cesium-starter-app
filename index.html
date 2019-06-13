@@ -405,7 +405,20 @@ function setupLayers() {
             Cesium.createTileMapServiceImageryProvider({
                 url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
             }));
-  
+            addAdditionalLayerOption(
+            '6 Inch Maps - Ireland',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://mapwarper.net/mosaics/wms/101',
+                layers : '1',
+                credit : 'MapWarper, \u00A9',
+//proxy: new Cesium.DefaultProxy('/proxy/'),
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  
+
           addAdditionalLayerOption(
             'Europe Geology',
             new Cesium.WebMapServiceImageryProvider({
@@ -472,7 +485,7 @@ function setupLayers() {
             }),1.0,false);  //this false ensures that it is switched off initially
 
             addAdditionalLayerOption(
-            'Quaternary Geomorphology',
+            'Quaternary',
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
                 layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
