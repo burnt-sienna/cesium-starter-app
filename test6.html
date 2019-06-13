@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GeoPal</title>
+  <script src="https://cesiumjs.org/releases/1.57/Build/Cesium/Cesium.js"></script>
+
+  <!--<script src="ThirdParty/Cesium/Cesium.js"></script>-->
+  <!--<link href="https://cesiumjs.org/releases/1.57/Build/Cesium/Widgets/widgets.css" rel="stylesheet">-->
+
+ 
+  <style>
+       @import url(ThirdParty/Cesium/Widgets/widgets.css);
+                html, body, #cesiumContainer {
+                    height: 100%; margin: 0; padding: 0; overflow: hidden;
+                }
+   
+@import url(ThirdParty/Cesium/Widgets/bucket.css);
+#toolbar {
+                background: rgba(42, 42, 42, 0.8);
+                padding: 4px;
+                border-radius: 4px;
+                position:absolute;
+                top: 5px;
+                left: 5px;
+                display: block;
+                font-size: 13px;
+                color: rgb(255,255,255);
+                font-family: Verdana,Helvetica,Arial, sans-serif;
+                
+            }
+            #toolbar input {
+                vertical-align: middle;
+                padding-top: 2px;
+                padding-bottom: 2px;
+                font-size: 12px;
+                font-family: Verdana,Helvetica,Arial, sans-serif;
+            }
+            #toolbar table tr {
+                transform: translateY(0);
+                transition: transform 0.4s ease-out;
+            }
+            #toolbar table tr.up {
+                transform: translateY(33px);
+                transition: none;
+            }
+            #toolbar table tr.down {
+                transform: translateY(-33px);
+                transition: none;
+            }
+            #myLoc {
+                position: absolute;
+                bottom: 25px;
+                left: 1px;
+                background: rgba(42, 42, 42, 0.8);
+                font-size: 16px;
+                font-family: Verdana,Helvetica,Arial, sans-serif;
+        
+            }
+            #ctrlTerrain {
+                position: absolute;
+                background: rgba(42, 42, 42, 0.8);
+                font-size: 12px;
+                bottom: 25px;
+                right: 1px;
+                color:rgb(56, 12, 12);
+                color:white;
+                
+            }
+            
+            #info {
+                background: rgba(42, 42, 42, 0.8);
+                padding: 4px;
+                border-radius: 4px;
+                position:absolute;
+                bottom: 5px;
+                right: 5px;
+                display: none;
+                font-family: Verdana,Helvetica,Arial, sans-serif;
+                font-size: 13px;
+                color: rgb(255,255,255);
+                
+            }
+
+.cesium-button {
+    font-size:14px;
+    text-align: left;
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+}
+a {
+    color: rgb(255, 203, 105);
+}
+
+      </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="toolbar">
+        <table><tbody data-bind="foreach: layers">
+                <td><input type="checkbox" data-bind="checked: show"/></td>
+                <td>
+                    <span data-bind="text: name, visible: !$parent.isSelectableLayer($data)"></span>
+                    <select data-bind="visible: $parent.isSelectableLayer($data), options: $parent.baseLayers, optionsText: 'name', value: $parent.selectedLayer"></select>
+                </td>
+                <td>
+                    <input type="range" min="0" max="1" step="0.01" data-bind="value: alpha, valueUpdate: 'input'"/>
+                </td>
+           
+        </tbody></table>
+        </div>
+
+        <div id="myLoc">
+                <button type = "button" class="cesium-button" data-bind="click: info()">&#8505;</button>
+                <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>      
+                <button type = "button" class="cesium-button" data-bind="click: goToDeviceLoc()">&#9881;</button>
+                <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
+                <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
+             </div>
+            
+            <div id = "info">
+                <table>
+                      <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
+                    <tr><td>&#9776</td><td>Hide/Show layer menu</td><td><a href="https://www.gmit.ie/heritage/bachelor-arts-honours-history-and-geography">GMIT</a>. Thanks to:</td></tr>
+                    <tr><td>&#9881</td><td>Go to your location</td><td><a href="https://www.gsi.ie">Geological Survey of Ireland</a></td></tr>
+                    <tr><td>&#8593</td><td>Orient display to North</td><td>and <a href="https://cesium.com/">Cesium</a> open source</td></tr>
+                    <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td>Javascript library. Enjoy &#9786</td></tr>
+                    <tr><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                </table>
+                
+                
+            </div>
+          
+
+  <script>
+function startUp(Cesium){
+    var vertExag = 1.0;
+    var vertExagMax = 1.5;
+    var myCount = 0;
+    var bolRebuild = false;
+    var bShow = false;
+    var bShowInfo = false;
+    document.getElementById('toolbar').style.display = 'block';
+
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
+    var worldTerrain = Cesium.createWorldTerrain({
+        requestWaterMask: true,
+        requestVertexNormals: true
+    });
+    
+    //var viewer = new Cesium.Viewer('cesiumContainer');
+    var viewer = createViewer(viewer,vertExag);
+
+    var imageryLayers = viewer.imageryLayers;
+//displayLoading();
+
+var viewModel = {
+    layers : [],
+    baseLayers : [],
+    selectedLayer : null,
+
+    isSelectableLayer : function(layer) {
+        return this.baseLayers.indexOf(layer) >= 0;
+    }
+};
+
+
+
+
+function createViewer(theViewer,vertExag){
+
+theViewer = new Cesium.Viewer('cesiumContainer', {
+    baseLayerPicker : false,
+   // geocoder:false,
+    homeButton:false,
+    infobox:false,
+    navigationInstructionsInitiallyVisible:false,
+    sceneModePicker:false,
+    animation:false,
+    timeline:false,  
+    fullscreenButton:false,
+    terrainExaggeration : vertExag
+});   
+    
+theViewer.terrainProvider = worldTerrain;  
+return theViewer;
+}  
+
+var viewModelNew = {  
+    info: function(){
+        showInfo();
+    },
+    goToDeviceLoc : function(){
+        getCurrentLocation();
+        return ;
+    },
+    toggle : function(){
+        if (myCount==0){
+            return;
+        }
+        else{}
+        doToggle();
+        return ;
+    },
+    faceNorth : function(){
+        var camera = viewer.camera;
+        camera.setView({
+            orientation: {
+            heading : 0,
+            pitch: camera.pitch,
+            roll: camera.roll
+            }
+        });
+        return;
+    },
+    toggleTerrain : function(){
+        if (myCount==0){
+            return;
+        }
+        else
+        {doToggleTerrain();
+        }
+
+    }
+}
+
+function showInfo(){
+    if (myCount==0){
+            return;
+        }
+    else
+    {   
+        var state = document.getElementById("info").style.display;
+        if (state == 'block') {
+            document.getElementById("info").style.display = 'none';
+        } else {
+            document.getElementById("info").style.display = 'block';
+            }
+    };
+        
+    }
+    
+
+function doToggleTerrain(){
+    if (vertExag == vertExagMax){            
+            vertExag = 1.0;
+        }else
+            {
+                vertExag=vertExagMax;    
+            }
+        var newHeading = viewer.camera.heading;
+        var newPitch = viewer.camera.pitch;
+        var newRoll = viewer.camera.roll
+        var newDestination = new Cesium.Cartesian3(viewer.destination)
+        
+        newDestination.x = viewer.camera.positionWC.x;
+        newDestination.y = viewer.camera.positionWC.y;
+        newDestination.z = viewer.camera.positionWC.z;
+
+
+        var numLayers = viewModel.layers.length  
+        var toolbarSetting = function(name, alpha,show){
+            this.name = name;
+            this.alpha = alpha;
+            this.show = show;
+        };
+        var toolbarSettings = [];
+//build array of settings here
+        var nameSet = '';
+        var alphaSet = 0;
+        var showSet = false;
+       
+        for (var i = 0 ; i < numLayers; ++i) {
+            nameSet = viewModel.layers[i].name
+            alphaSet = viewModel.layers[i].alpha;
+            showSet = viewModel.layers[i].show;
+            var lyrSetting = new toolbarSetting(nameSet,alphaSet, showSet);
+            toolbarSettings.push(lyrSetting);
+        }
+        var activeLayerName = ''
+        var intStart = viewModel.layers.length - 1;;
+        for (var i = intStart; i >= 0; --i) {
+            if (viewModel.layers[i].name  === viewModel.selectedLayer.name) {
+                activeLayerName = viewModel.selectedLayer.name;
+                break;
+            }
+        }
+
+
+        //***************************
+        viewer.destroy();
+        //******************************
+        viewer = createViewer(viewer,vertExag);
+
+        imageryLayers = viewer.imageryLayers;
+        bolRebuild = true;
+        var i = 0;
+    
+        updateLayerList(); 
+        Cesium.knockout.cleanNode(toolbar);
+        viewModel.layers = [];
+        viewModel.baseLayers =[];
+        viewModel.selectedLayer = null;
+        
+        viewModel.isSelectableLayer = function(layer) {
+        return viewModel.baseLayers.indexOf(layer) >= 0;
+        }
+       
+      
+
+        setupLayers();    
+        updateLayerList();
+        Cesium.knockout.applyBindings(viewModel, toolbar);
+        updateLayerList();
+        
+        for (var i = numLayers - 1; i >= 0; --i) {
+            alphaSet = toolbarSettings[i].alpha;
+            showSet = toolbarSettings[i].show;
+            viewModel.layers[i].alpha = alphaSet;
+            viewModel.layers[i].show = showSet;
+        }
+        var intStart = viewModel.baseLayers.length - 1;;
+        for (var i = intStart; i >= 0; --i) {
+            if (viewModel.baseLayers[i].name  === activeLayerName ) {
+                viewModel.selectedLayer = viewModel.baseLayers[i];
+                break;
+            }
+        }
+        updateLayerList();
+        viewer.camera.setView({
+            destination : new Cesium.Cartesian3( newDestination.x,newDestination.y,newDestination.z),
+            orientation: {
+                heading : newHeading,
+                pitch: newPitch
+            }
+        });
+        
+        var c = document.getElementById("myLoc").childNodes;
+        if (vertExag == vertExagMax){  
+            c[9].style.backgroundColor = "rgb(56, 12, 12)";
+        }
+        else{
+            c[9].style.backgroundColor = '#303336';
+
+        }
+           
+
+
+    }
+
+
+function doToggle(){
+    var stateToolbar = document.getElementById('toolbar').style.display;
+    var stateInfo = document.getElementById('info').style.display;
+    
+
+    if ((stateToolbar == '') || (stateToolbar == 'none')) {  //it is hidden
+        document.getElementById('toolbar').style.display = 'block';
+        if (stateInfo == 'block'){
+            document.getElementById('info').style.display = 'none';
+        }
+        
+    } else {
+
+        document.getElementById('toolbar').style.display = 'none'; 
+
+ }
+ 
+}
+
+
+var baseLayers = viewModel.baseLayers;
+
+var west = -10.5;
+var south = 51.25;
+var east = -6.0;
+var north = 55.6;
+
+var AOIrectangle = Cesium.Rectangle.fromDegrees(west, south, east, north);
+var layers = viewer.scene.imageryLayers;
+
+
+
+
+
+Cesium.knockout.track(viewModel);
+
+function setupLayers() {
+    // Create all the base layers that this example will support.
+    // These base layers aren't really special.  It's possible to have multiple of them
+    // enabled at once, just like the other layers, but it doesn't make much sense because
+    // all of these layers cover the entire globe and are opaque.
+    //alert('start of setupLayers');
+
+
+    addBaseLayerOption(
+            'Bing Maps Aerial',
+            undefined); 
+
+      addBaseLayerOption(
+            'OpenStreetMap',
+            Cesium.createOpenStreetMapImageryProvider());
+    
+    
+    
+    addBaseLayerOption(
+            'Natural Earth II (local)',
+            Cesium.createTileMapServiceImageryProvider({
+                url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+            }));
+  
+          addAdditionalLayerOption(
+            'Europe Geology',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://mapsref.brgm.fr/wxs/1GG/GISEurope_Bedrock_and_Structural_Geology',
+                layers : 'Europe_GISEurope_1500K_BedrockAge,Europe_GISEurope_1500K_Faults',
+                credit : 'OneGeology, \u00A9',
+//proxy: new Cesium.DefaultProxy('/proxy/'),
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
+        addAdditionalLayerOption(
+            'GSI Geology',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+                layers : '0',
+                credit : 'GSI \u00A9',
+//proxy: new Cesium.DefaultProxy('/proxy/'),
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
+            addAdditionalLayerOption(
+            'Boundaries and faults',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+                layers : '1',
+                credit : 'GSI \u00A9',
+
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
+            addAdditionalLayerOption(
+            'Outcrops',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+                layers : '2',
+                credit : 'GSI \u00A9',
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
+            addAdditionalLayerOption(
+            'Symbols',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+                layers : '3',
+                credit : 'GSI \u00A9',
+
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
+
+            addAdditionalLayerOption(
+            'Quaternary Geomorphology',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
+                layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
+                credit : 'GSI \u00A9',
+//proxy: new Cesium.DefaultProxy('/proxy/'),
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false); 
+       
+}
+// this function is called at startup and whenever he exageration is changed
+function addBaseLayerOption(name, imageryProvider) {
+    var layer;
+    if (typeof imageryProvider === 'undefined') {
+        layer = imageryLayers.get(0);
+        viewModel.selectedLayer = layer;
+    } else {
+        layer = new Cesium.ImageryLayer(imageryProvider);
+    }
+    layer.name = name;
+
+    viewModel.baseLayers.push(layer);
+}
+
+
+function addAdditionalLayerOption(name, imageryProvider, alpha, show) {
+    var layer = imageryLayers.addImageryProvider(imageryProvider);
+    layer.alpha = Cesium.defaultValue(alpha, 0.5);
+    layer.show = Cesium.defaultValue(show, true);
+    layer.name = name;
+    Cesium.knockout.track(layer, ['alpha', 'show', 'name']);
+}
+
+function updateLayerList() {
+    var numLayers = imageryLayers.length;
+    viewModel.layers.splice(0, viewModel.layers.length);
+    for (var i = numLayers - 1; i >= 0; --i) {
+        viewModel.layers.push(imageryLayers.get(i));
+    }
+}
+
+setupLayers();
+updateLayerList();
+//Bind the viewModel to the DOM elements of the UI that call for it.
+var toolbar = document.getElementById('toolbar');
+var myLoc = document.getElementById('myLoc');
+
+
+Cesium.knockout.applyBindings(viewModel, toolbar);
+
+Cesium.knockout.applyBindings(viewModelNew, myLoc);
+
+
+Cesium.knockout.getObservable(viewModel, 'selectedLayer').subscribe(function(baseLayer) {
+    var activeLayerIndex = 0;
+
+    var numLayers = viewModel.layers.length;
+
+    for (var i = 0; i < numLayers; ++i) {
+        if (viewModel.isSelectableLayer(viewModel.layers[i])) {
+            activeLayerIndex = i;
+            break;
+        }
+    }
+    
+    if (bolRebuild){
+        activeLayerIndex = 0;
+        bolRebuild = false;
+    }  
+   
+    if (numLayers > 0) {
+        var activeLayer = viewModel.layers[activeLayerIndex];
+
+        var show = activeLayer.show;
+        var alpha = activeLayer.alpha;
+        imageryLayers.remove(activeLayer, false);
+        imageryLayers.add(baseLayer, numLayers - activeLayerIndex - 1);
+        baseLayer.show = show;
+        baseLayer.alpha = alpha;
+    }
+    updateLayerList();
+});
+
+function getCurrentLocation() {
+
+    viewer.entities.removeAll();
+
+    navigator.geolocation.getCurrentPosition(fly);
+}
+
+
+
+function fly(position) {
+        var source = new Cesium.CustomDataSource();
+        viewer.dataSources.add(source);
+        var entity = source.entities.add({
+            position : Cesium.Cartesian3.fromDegrees(position.coords.longitude, position.coords.latitude),
+
+          
+            ellipse : {
+            semiMajorAxis : 10.0,
+                semiMinorAxis : 10.0,
+                height:0,
+                outlineWidth : 1.0,     
+                material : new Cesium.ColorMaterialProperty(new Cesium.Color(0.2, 0.2, 1.0, 0.5))
+            }
+            
+        });
+
+        viewer.camera.flyTo({
+            destination : Cesium.Cartesian3.fromDegrees(position.coords.longitude, position.coords.latitude, 1005.0)
+
+        });
+    }
+
+
+
+myCount=myCount + 1; 
+} // end startup
+if (typeof Cesium !== "undefined") {
+
+startUp(Cesium);
+} else if (typeof require === "function") {
+require(["Cesium"], startup);
+}
+  </script>
+</body>
+</html>
