@@ -116,11 +116,11 @@ a {
             
             <div id = "info">
                 <table>
-                      <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
-                    <tr><td>&#9776</td><td>Hide/Show layer menu</td><td><a href="https://www.gmit.ie/heritage/bachelor-arts-honours-history-and-geography">GMIT</a>. Thanks to:</td></tr>
-                    <tr><td>&#9881</td><td>Go to your location</td><td><a href="https://www.gsi.ie">Geological Survey of Ireland</a></td></tr>
-                    <tr><td>&#8593</td><td>Orient display to North</td><td>and <a href="https://cesium.com/">Cesium</a> open source</td></tr>
-                    <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td>Javascript library. Enjoy &#9786</td></tr>
+                      <tr><td>&#8505</td><td>Hide/show this info panel</td><td>Test Cesium App</td></tr>
+                    <tr><td>&#9776</td><td>Hide/Show layer menu</td><td></td></tr>
+                    <tr><td>&#9881</td><td>Go to your location</td><td></td></tr>
+                    <tr><td>&#8593</td><td>Orient display to North</td><td></td></tr>
+                    <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td></td></tr>
                     <tr><td></td><td></td><td></td></tr>
                     <tr><td></td><td></td></tr>
                 </table>
@@ -447,7 +447,7 @@ function setupLayers() {
             'Built up areas',
             new Cesium.WebMapServiceImageryProvider({
                 url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
-                layers: ' TOPO250K_Built_Up_Areas',
+                layers: ' TOPO1M_Built_Up_Areas',
                  parameters : {
                     transparent : 'true',
                     format : 'image/png',
