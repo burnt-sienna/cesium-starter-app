@@ -157,7 +157,7 @@ prev north 8657 &#8593;-->
   <script>
 function startUp(Cesium){
     //var viewer = new Cesium.Viewer('cesiumContainer');
-          alert('starup start');  
+    alert('startup start');  
     var vertExag = 1.0;
     var vertExagMax = 1.5;
     var myCount = 0;
@@ -166,13 +166,14 @@ function startUp(Cesium){
     var bShowInfo = false;
 
     document.getElementById('toolbar').style.display = 'block';
-
+    alert('after get elementby id');  
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
     var worldTerrain = Cesium.createWorldTerrain({
         requestWaterMask: true,
         requestVertexNormals: true
     });
-
+    alert('after create world terrain');
+    alert(worldTerrain.requestWaterMask);
 
 
     var viewer = createViewer(viewer,vertExag);
