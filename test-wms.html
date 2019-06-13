@@ -406,76 +406,13 @@ function setupLayers() {
                 url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
             }));
   
-          addAdditionalLayerOption(
-            'Europe Geology',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://mapsref.brgm.fr/wxs/1GG/GISEurope_Bedrock_and_Structural_Geology',
-                layers : 'Europe_GISEurope_1500K_BedrockAge,Europe_GISEurope_1500K_Faults',
-                credit : 'OneGeology, \u00A9',
-//proxy: new Cesium.DefaultProxy('/proxy/'),
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
-        addAdditionalLayerOption(
-            'GSI Geology',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '0',
-                credit : 'GSI \u00A9',
-//proxy: new Cesium.DefaultProxy('/proxy/'),
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
-            addAdditionalLayerOption(
-            'Boundaries and faults',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '1',
-                credit : 'GSI \u00A9',
-
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
-            addAdditionalLayerOption(
-            'Outcrops',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '2',
-                credit : 'GSI \u00A9',
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
-            addAdditionalLayerOption(
-            'Symbols',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '3',
-                credit : 'GSI \u00A9',
-
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
+          
 
             addAdditionalLayerOption(
             'Quaternary Geomorphology',
             new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
-                layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
+                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
+                layers: 'TOPO250K_Native_Vegetation',
                 credit : 'GSI \u00A9',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
@@ -486,21 +423,17 @@ function setupLayers() {
             }),1.0,false); 
  
             addAdditionalLayerOption(
-            'TEST ',
+            'Countries ',
             new Cesium.WebMapServiceImageryProvider({
-                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
+                url : 'https://services.ga.gov.au/gis/services/World_Political_Boundaries_WM/MapServer/WMSServer',
                 layers: 'Countries',
-                credit : 'GSI \u00A9',
-//proxy: new Cesium.DefaultProxy('/proxy/'),
+                
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
-                    rectangle: AOIrectangle
                 }
             }),1.0,false);          
-           
-           // http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer
-            //https://services.ga.gov.au/gis/services/World_Political_Boundaries_WM/MapServer/WMSServer
+         
 }
 // this function is called at startup and whenever he exageration is changed
 function addBaseLayerOption(name, imageryProvider) {
