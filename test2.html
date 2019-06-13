@@ -21,6 +21,29 @@
         </tbody></table>
         </div>
 
+        <div id="myLoc">
+                <button type = "button" class="cesium-button" data-bind="click: info()">&#8505;</button>
+                <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>      
+                <button type = "button" class="cesium-button" data-bind="click: goToDeviceLoc()">&#9881;</button>
+                <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
+                <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
+             </div>
+            
+            <div id = "info">
+                <table>
+                      <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
+                    <tr><td>&#9776</td><td>Hide/Show layer menu</td><td><a href="https://www.gmit.ie/heritage/bachelor-arts-honours-history-and-geography">GMIT</a>. Thanks to:</td></tr>
+                    <tr><td>&#9881</td><td>Go to your location</td><td><a href="https://www.gsi.ie">Geological Survey of Ireland</a></td></tr>
+                    <tr><td>&#8593</td><td>Orient display to North</td><td>and <a href="https://cesium.com/">Cesium</a> open source</td></tr>
+                    <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td>Javascript library. Enjoy &#9786</td></tr>
+                    <tr><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td></tr>
+                </table>
+                
+                
+            </div>
+          
+
   <script>
     var vertExag = 1.0;
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
