@@ -8,12 +8,35 @@
 <body>
   <div id="cesiumContainer" style="width: 700px; height:400px"></div>
   <script>
+    var vertExag = 1.0;
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
     var worldTerrain = Cesium.createWorldTerrain({
         requestWaterMask: true,
         requestVertexNormals: true
     });
-    var viewer = new Cesium.Viewer('cesiumContainer');
+    
+    //var viewer = new Cesium.Viewer('cesiumContainer');
+    var viewer = createViewer(viewer,vertExag);
+    function createViewer(theViewer,vertExag){
+
+theViewer = new Cesium.Viewer('cesiumContainer', {
+    baseLayerPicker : false,
+   // geocoder:false,
+    homeButton:false,
+    infobox:false,
+    navigationInstructionsInitiallyVisible:false,
+    sceneModePicker:false,
+    animation:false,
+    timeline:false,  
+    fullscreenButton:false,
+    terrainExaggeration : vertExag
+});   
+    
+theViewer.terrainProvider = worldTerrain;  
+return theViewer;
+}  
+
+
   </script>
 </body>
 </html>
