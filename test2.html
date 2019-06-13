@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://cesiumjs.org/releases/1.58/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesiumjs.org/releases/1.58/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="toolbar">
+        <table><tbody data-bind="foreach: layers">
+                <td><input type="checkbox" data-bind="checked: show"/></td>
+                <td>
+                    <span data-bind="text: name, visible: !$parent.isSelectableLayer($data)"></span>
+                    <select data-bind="visible: $parent.isSelectableLayer($data), options: $parent.baseLayers, optionsText: 'name', value: $parent.selectedLayer"></select>
+                </td>
+                <td>
+                    <input type="range" min="0" max="1" step="0.01" data-bind="value: alpha, valueUpdate: 'input'"/>
+                </td>
+           
+        </tbody></table>
+        </div>
+
+  <script>
+    var vertExag = 1.0;
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
+    var worldTerrain = Cesium.createWorldTerrain({
+        requestWaterMask: true,
+        requestVertexNormals: true
+    });
+    
+    //var viewer = new Cesium.Viewer('cesiumContainer');
+    var viewer = createViewer(viewer,vertExag);
+    function createViewer(theViewer,vertExag){
+
+theViewer = new Cesium.Viewer('cesiumContainer', {
+    baseLayerPicker : false,
+   // geocoder:false,
+    homeButton:false,
+    infobox:false,
+    navigationInstructionsInitiallyVisible:false,
+    sceneModePicker:false,
+    animation:false,
+    timeline:false,  
+    fullscreenButton:false,
+    terrainExaggeration : vertExag
+});   
+    
+theViewer.terrainProvider = worldTerrain;  
+return theViewer;
+}  
+
+
+  </script>
+</body>
+</html>
