@@ -45,6 +45,7 @@
           
 
   <script>
+function startUp(Cesium){
     var vertExag = 1.0;
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
     var worldTerrain = Cesium.createWorldTerrain({
@@ -73,7 +74,14 @@ theViewer.terrainProvider = worldTerrain;
 return theViewer;
 }  
 
+myCount=myCount + 1; 
+} // end startup
+if (typeof Cesium !== "undefined") {
 
+startUp(Cesium);
+} else if (typeof require === "function") {
+require(["Cesium"], startup);
+}
   </script>
 </body>
 </html>
