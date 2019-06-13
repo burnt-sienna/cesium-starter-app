@@ -408,20 +408,7 @@ function setupLayers() {
   
           
 
-            addAdditionalLayerOption(
-            'Quaternary Geomorphology',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
-                layers: 'TOPO250K_Native_Vegetation',
-                credit : 'GSI \u00A9',
-//proxy: new Cesium.DefaultProxy('/proxy/'),
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false); 
- 
+            
             addAdditionalLayerOption(
             'Countries ',
             new Cesium.WebMapServiceImageryProvider({
@@ -433,7 +420,41 @@ function setupLayers() {
                     format : 'image/png',
                 }
             }),1.0,false);          
-         
+            addAdditionalLayerOption(
+            'Native Vegetation',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
+                layers: 'TOPO250K_Native_Vegetation',
+
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+
+                }
+            }),1.0,false); 
+            addAdditionalLayerOption(
+            'Islands',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
+                layers: 'TOPO250K_Islands_1',
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+
+                }
+            }),1.0,false); 
+            addAdditionalLayerOption(
+            'Built up areas',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'http://gaservices.ga.gov.au/site_7/services/Topographic_Base_Map_WM/MapServer/WMSServer',
+                layers: ' TOPO250K_Built_Up_Areas',
+                 parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+
+                }
+            }),1.0,false); 
+           
 }
 // this function is called at startup and whenever he exageration is changed
 function addBaseLayerOption(name, imageryProvider) {
