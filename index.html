@@ -45,7 +45,7 @@
             }
             #myLoc {
                 position: absolute;
-                top: 5px;
+                top: 1px;
                 right: 1px;
                 background: rgba(42, 42, 42, 0.8);
                 font-size: 16px;
@@ -79,7 +79,7 @@
 
 .cesium-button {
     font-size:14px;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
     width: 30px;
     height: 30px;
@@ -87,65 +87,79 @@
 a {
     color: rgb(255, 203, 105);
 }
+
 #geoCoder {
-    font-size:14px;
     text-align: center;
-    vertical-align: middle;
-    width: 30px;
-    height: 30px;
     position: absolute;
-    top: 5px;
-    right: 75px;
+    top: 1px;
+    right: 215px;
 }
-      </style>
+
+
+  </style>
 </head>
 <body>
-  <div id="cesiumContainer"></div>
-  <div id="toolbar">
-        <table><tbody data-bind="foreach: layers">
-                <td><input type="checkbox" data-bind="checked: show"/></td>
-                <td>
-                    <span data-bind="text: name, visible: !$parent.isSelectableLayer($data)"></span>
-                    <select data-bind="visible: $parent.isSelectableLayer($data), options: $parent.baseLayers, optionsText: 'name', value: $parent.selectedLayer"></select>
-                </td>
-                <td>
-                    <input type="range" min="0" max="1" step="0.01" data-bind="value: alpha, valueUpdate: 'input'"/>
-                </td>
-           
-        </tbody></table>
-        </div>
 
-<div id="myLoc">
-                <button type = "button" class="cesium-button" data-bind="click: info()">&#8505;</button>
-                <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>      
-                <button type = "button" class="cesium-button" data-bind="click: goToDeviceLoc()">&#9881;</button>
-                <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
-                <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
-             </div>
-<div id="geoCoder"></div>
-<div id = "info">
-                <table>
-                      <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
-                    <tr><td>&#9776</td><td>Hide/Show layer menu</td><td><a href="https://www.gmit.ie/heritage/bachelor-arts-honours-history-and-geography">GMIT</a>. Thanks to:</td></tr>
-                    <tr><td>&#9881</td><td>Go to your location</td><td><a href="https://www.gsi.ie">Geological Survey of Ireland</a></td></tr>
-                    <tr><td>&#8593</td><td>Orient display to North</td><td>and <a href="https://cesium.com/">Cesium</a> open source</td></tr>
-                    <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td>Javascript library. Enjoy &#9786</td></tr>
-                    <tr><td></td><td></td><td></td></tr>
-                    <tr><td></td><td></td></tr>
-                </table>
-                
-                
-            </div>
-          
+
+  <div id="cesiumContainer"></div>
+<!-- <div id = "loading-overlay"></div>   -->
+<div id = "geoCoder">
+</div>
+  <div id="toolbar">
+          <table><tbody data-bind="foreach: layers">
+              <!<tr data-bind="css: { up: $parent.upLayer === $data, down: $parent.downLayer === $data }"><!</tr>
+                  <td><input type="checkbox" data-bind="checked: show"/></td>
+                  <td>
+                      <span data-bind="text: name, visible: !$parent.isSelectableLayer($data)"></span>
+                      <select data-bind="visible: $parent.isSelectableLayer($data), options: $parent.baseLayers, optionsText: 'name', value: $parent.selectedLayer"></select>
+                  </td>
+                  <td>
+                      <input type="range" min="0" max="1" step="0.01" data-bind="value: alpha, valueUpdate: 'input'"/>
+                  </td>
+              <!</tr>
+             
+          </tbody></table>
+          </div>
+  <! #x1F6C8>
+  
+  <div id="myLoc">
+      <button type = "button" class="cesium-button" data-bind="click: info()">&#8505;</button>
+      <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>      
+      <button type = "button" class="cesium-button" data-bind="click: goToDeviceLoc()">&#9881;</button>
+      <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
+      <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
+   </div>
+
+  <div id = "info">
+      <table>
+            <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
+          <tr><td>&#9776</td><td>Hide/Show layer menu</td><td><a href="https://www.gmit.ie/heritage/bachelor-arts-honours-history-and-geography">GMIT</a>. Thanks to:</td></tr>
+          <tr><td>&#9881</td><td>Go to your location</td><td><a href="https://www.gsi.ie">Geological Survey of Ireland</a></td></tr>
+          <tr><td>&#8593</td><td>Orient display to North</td><td>and <a href="https://cesium.com/">Cesium</a> open source</td></tr>
+          <tr><td>&#9968</td><td>Toggle vertical exaggeration</td><td>Javascript library. Enjoy &#9786</td></tr>
+          <tr><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td></tr>
+      </table>
+      
+      
+  </div>
+
+
+<!--previous symbol for infor &#9432  try this &#8505;-
+   prev syjmbol for layers 9967 layers try this  &#9776;  
+   prev 8853 try this for current loc &#10162;  
+prev north 8657 &#8593;-->
 
   <script>
 function startUp(Cesium){
+    //var viewer = new Cesium.Viewer('cesiumContainer');
     var vertExag = 1.0;
     var vertExagMax = 1.5;
     var myCount = 0;
     var bolRebuild = false;
     var bShow = false;
     var bShowInfo = false;
+
     document.getElementById('toolbar').style.display = 'block';
 
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
@@ -153,11 +167,14 @@ function startUp(Cesium){
         requestWaterMask: true,
         requestVertexNormals: true
     });
+
+
     
-    //var viewer = new Cesium.Viewer('cesiumContainer');
     var viewer = createViewer(viewer,vertExag);
 
-    var imageryLayers = viewer.imageryLayers;
+
+
+var imageryLayers = viewer.imageryLayers;
 //displayLoading();
 
 var viewModel = {
@@ -175,21 +192,22 @@ var viewModel = {
 
 function createViewer(theViewer,vertExag){
 
-theViewer = new Cesium.Viewer('cesiumContainer', {
-    baseLayerPicker : false,
-    geocoder:false,
-    homeButton:false,
-    infobox:false,
-    navigationInstructionsInitiallyVisible:false,
-    sceneModePicker:false,
-    animation:false,
-    timeline:false,  
-    fullscreenButton:false,
-    terrainExaggeration : vertExag
-});   
-    
-theViewer.terrainProvider = worldTerrain;  
-return theViewer;
+    theViewer = new Cesium.Viewer('cesiumContainer', {
+        baseLayerPicker : false,
+        geocoder:false,
+        homeButton:false,
+        infobox:false,
+        navigationHelpButton:false,
+        navigationInstructionsInitiallyVisible:false,
+        sceneModePicker:false,
+        animation:false,
+        timeline:false,  
+        fullscreenButton:false,
+        terrainExaggeration : vertExag
+    });   
+        
+    theViewer.terrainProvider = worldTerrain;  
+    return theViewer;
 }  
 
 var theGeoCoder = Cesium.Geocoder( {
@@ -197,7 +215,6 @@ var theGeoCoder = Cesium.Geocoder( {
     scene : viewer.scene
     
 });
-
 var viewModelNew = {  
     info: function(){
         showInfo();
@@ -235,7 +252,6 @@ var viewModelNew = {
 
     }
 }
-
 
 function showInfo(){
     if (myCount==0){
@@ -421,20 +437,7 @@ function setupLayers() {
             Cesium.createTileMapServiceImageryProvider({
                 url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
             }));
-            addAdditionalLayerOption(
-            '6 Inch Maps - Ireland',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://mapwarper.net/mosaics/wms/101',
-                layers : '1',
-                credit : 'MapWarper, \u00A9',
-//proxy: new Cesium.DefaultProxy('/proxy/'),
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  
-
+  
           addAdditionalLayerOption(
             'Europe Geology',
             new Cesium.WebMapServiceImageryProvider({
@@ -474,18 +477,18 @@ function setupLayers() {
                     rectangle: AOIrectangle
                 }
             }),1.0,false);  //this false ensures that it is switched off initially
-            //addAdditionalLayerOption(
-            //'Outcrops',
-            //new Cesium.WebMapServiceImageryProvider({
-            //    url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-            //    layers : '2',
-            //    credit : 'GSI \u00A9',
-            //    parameters : {
-            //        transparent : 'true',
-            //        format : 'image/png',
-            //        rectangle: AOIrectangle
-            //    }
-            //}),1.0,false);  //this false ensures that it is switched off initially
+            addAdditionalLayerOption(
+            'Outcrops',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+                layers : '2',
+                credit : 'GSI \u00A9',
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+            }),1.0,false);  //this false ensures that it is switched off initially
             addAdditionalLayerOption(
             'Symbols',
             new Cesium.WebMapServiceImageryProvider({
@@ -501,7 +504,7 @@ function setupLayers() {
             }),1.0,false);  //this false ensures that it is switched off initially
 
             addAdditionalLayerOption(
-            'Quaternary',
+            'Quaternary Geomorphology',
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
                 layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
@@ -622,13 +625,15 @@ function fly(position) {
 
 
 
-myCount=myCount + 1; 
-} // end startup
+    myCount=myCount + 1; 
+} //end startup
+
+
 if (typeof Cesium !== "undefined") {
 
-startUp(Cesium);
+    startUp(Cesium);
 } else if (typeof require === "function") {
-require(["Cesium"], startup);
+    require(["Cesium"], startup);
 }
   </script>
 </body>
