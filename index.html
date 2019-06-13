@@ -458,18 +458,18 @@ function setupLayers() {
                     rectangle: AOIrectangle
                 }
             }),1.0,false);  //this false ensures that it is switched off initially
-            addAdditionalLayerOption(
-            'Outcrops',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '2',
-                credit : 'GSI \u00A9',
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
+            //addAdditionalLayerOption(
+            //'Outcrops',
+            //new Cesium.WebMapServiceImageryProvider({
+            //    url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
+            //    layers : '2',
+            //    credit : 'GSI \u00A9',
+            //    parameters : {
+            //        transparent : 'true',
+            //        format : 'image/png',
+            //        rectangle: AOIrectangle
+            //    }
+            //}),1.0,false);  //this false ensures that it is switched off initially
             addAdditionalLayerOption(
             'Symbols',
             new Cesium.WebMapServiceImageryProvider({
