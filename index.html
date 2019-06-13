@@ -87,7 +87,11 @@
 a {
     color: rgb(255, 203, 105);
 }
-
+#geoCoder {
+                position: absolute;
+                bottom: 5px;
+                right: 1px;
+               }
       </style>
 </head>
 <body>
@@ -113,7 +117,7 @@ a {
                 <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
                 <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
              </div>
-            
+<div id="geoCoder"></div>
 <div id = "info">
                 <table>
                       <tr><td>&#8505</td><td>Hide/show this info panel</td><td>GeoPal was developed by </td></tr>
@@ -168,7 +172,7 @@ function createViewer(theViewer,vertExag){
 
 theViewer = new Cesium.Viewer('cesiumContainer', {
     baseLayerPicker : false,
-   // geocoder:false,
+    geocoder:false,
     homeButton:false,
     infobox:false,
     navigationInstructionsInitiallyVisible:false,
@@ -182,6 +186,12 @@ theViewer = new Cesium.Viewer('cesiumContainer', {
 theViewer.terrainProvider = worldTerrain;  
 return theViewer;
 }  
+
+var theGeoCoder = Cesium.Geocoder( {
+    container : 'geoCoder',
+    scene : viewer.scene
+    
+});
 
 var viewModelNew = {  
     info: function(){
@@ -220,6 +230,7 @@ var viewModelNew = {
 
     }
 }
+
 
 function showInfo(){
     if (myCount==0){
