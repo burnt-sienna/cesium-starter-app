@@ -11,6 +11,7 @@
   <style>
       
 @import url(ThirdParty/Cesium/Widgets/bucket.css);
+
 #toolbar {
                 background: rgba(42, 42, 42, 0.8);
                 padding: 4px;
@@ -82,17 +83,21 @@
     text-align: left;
     vertical-align: middle;
     width: 30px;
-    height: 30px;
+    height: 30px; 
 }
 a {
     color: rgb(255, 203, 105);
 }
+.cesium-viewer-geocoderContainer{
+
+}
 
 #geoCoder {
-    text-align: center;
-    position: absolute;
-    top: 1px;
-    right: 215px;
+   text-align: center;
+    top: 2px;
+   right: 210px; 
+       position: absolute;
+
 }
 
 
@@ -103,7 +108,7 @@ a {
 
   <div id="cesiumContainer"></div>
 <!-- <div id = "loading-overlay"></div>   -->
-<div id = "geoCoder">
+<!--<div id = "geoCoder" class ="cesium-viewer-geocoderContainer">-->
 </div>
   <div id="toolbar">
           <table><tbody data-bind="foreach: layers">
@@ -121,14 +126,18 @@ a {
           </tbody></table>
           </div>
   <! #x1F6C8>
-  
+
   <div id="myLoc">
+     
       <button type = "button" class="cesium-button" data-bind="click: info()">&#8505;</button>
-      <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>      
+      <button type = "button" class="cesium-button" data-bind="click: toggle('toolbar')">&#9776;</button>
       <button type = "button" class="cesium-button" data-bind="click: goToDeviceLoc()">&#9881;</button>
       <button type = "button" class="cesium-button" data-bind="click: faceNorth()">&#8593;</button>
       <button type = "button" class="cesium-button" data-bind="click: toggleTerrain()">&#9968;</button>
+      
+      
    </div>
+   <div id = "geoCoder" class ="cesium-viewer-geocoderContainer" > </div>
 
   <div id = "info">
       <table>
@@ -145,11 +154,6 @@ a {
   </div>
 
 
-<!--previous symbol for infor &#9432  try this &#8505;-
-   prev syjmbol for layers 9967 layers try this  &#9776;  
-   prev 8853 try this for current loc &#10162;  
-prev north 8657 &#8593;-->
-
   <script>
 function startUp(Cesium){
     //var viewer = new Cesium.Viewer('cesiumContainer');
@@ -164,7 +168,7 @@ function startUp(Cesium){
 
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
     var worldTerrain = Cesium.createWorldTerrain({
-        requestWaterMask: true,
+        //requestWaterMask: true,
         requestVertexNormals: true
     });
 
@@ -213,7 +217,7 @@ function createViewer(theViewer,vertExag){
 var theGeoCoder = Cesium.Geocoder( {
     container : 'geoCoder',
     scene : viewer.scene
-    
+    //
 });
 var viewModelNew = {  
     info: function(){
@@ -254,11 +258,12 @@ var viewModelNew = {
 }
 
 function showInfo(){
+   
     if (myCount==0){
             return;
         }
     else
-    {   
+    {      
         var state = document.getElementById("info").style.display;
         if (state == 'block') {
             document.getElementById("info").style.display = 'none';
@@ -437,13 +442,25 @@ function setupLayers() {
             Cesium.createTileMapServiceImageryProvider({
                 url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
             }));
-  
+            addAdditionalLayerOption(
+            '6 Inch Maps - Ireland',
+            new Cesium.WebMapServiceImageryProvider({
+                url : 'https://mapwarper.net/mosaics/wms/101',
+                layers : '1',
+                credit : 'Historical 6" Maps:Glucksman Map Library, Trinity College Dublin',
+//proxy: new Cesium.DefaultProxy('/proxy/'),
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png',
+                    rectangle: AOIrectangle
+                }
+}),1.0,false); 
           addAdditionalLayerOption(
             'Europe Geology',
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://mapsref.brgm.fr/wxs/1GG/GISEurope_Bedrock_and_Structural_Geology',
                 layers : 'Europe_GISEurope_1500K_BedrockAge,Europe_GISEurope_1500K_Faults',
-                credit : 'OneGeology, \u00A9',
+                credit : 'OneGeology \u00A9',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -456,7 +473,7 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '0',
-                credit : 'GSI \u00A9',
+                credit : 'Ireland Geology: Contains Irish Public Sector Data (Geological Survey) licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) licence',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -469,20 +486,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '1',
-                credit : 'GSI \u00A9',
-
-                parameters : {
-                    transparent : 'true',
-                    format : 'image/png',
-                    rectangle: AOIrectangle
-                }
-            }),1.0,false);  //this false ensures that it is switched off initially
-            addAdditionalLayerOption(
-            'Outcrops',
-            new Cesium.WebMapServiceImageryProvider({
-                url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
-                layers : '2',
-                credit : 'GSI \u00A9',
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
@@ -494,8 +497,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '3',
-                credit : 'GSI \u00A9',
-
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
@@ -504,11 +505,10 @@ function setupLayers() {
             }),1.0,false);  //this false ensures that it is switched off initially
 
             addAdditionalLayerOption(
-            'Quaternary Geomorphology',
+            'Quaternary',
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
                 layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
-                credit : 'GSI \u00A9',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -626,6 +626,7 @@ function fly(position) {
 
 
     myCount=myCount + 1; 
+
 } //end startup
 
 
