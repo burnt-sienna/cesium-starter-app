@@ -141,7 +141,6 @@ function startUp(Cesium){
 
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2MDk2Yzc3NC00NjU4LTQ2YWQtOWJiMS00NTA0MDA5NzdiMDciLCJpZCI6MTE2NjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1NTcyNTF9.m3vMP2Z0Yrcq_gR7IWsEj5Q2eXtdRPKlsbxv1n--8AM';
     var worldTerrain = Cesium.createWorldTerrain({
-        requestWaterMask: true,
         requestVertexNormals: true
     });
     
@@ -410,7 +409,7 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://mapwarper.net/mosaics/wms/101',
                 layers : '1',
-                credit : 'MapWarper, \u00A9',
+                credit : 'Historical 6" Maps:Glucksman Map Library, Trinity College Dublin',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -437,7 +436,7 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '0',
-                credit : 'GSI \u00A9',
+                credit : 'Ireland Geology: Contains Irish Public Sector Data (Geological Survey) licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) licence',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -475,8 +474,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '3',
-                credit : 'GSI \u00A9',
-
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
@@ -489,7 +486,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
                 layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
-                credit : 'GSI \u00A9',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
