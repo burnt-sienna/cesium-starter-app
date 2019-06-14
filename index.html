@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <title>GeoPal</title>
   <script src="https://cesiumjs.org/releases/1.57/Build/Cesium/Cesium.js"></script>
 
@@ -410,7 +414,7 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://mapwarper.net/mosaics/wms/101',
                 layers : '1',
-                credit : 'MapWarper, \u00A9',
+                credit : 'Historical 6" Maps:Glucksman Map Library, Trinity College Dublin',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -437,7 +441,7 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '0',
-                credit : 'GSI \u00A9',
+                credit : 'Ireland Geology: Contains Irish Public Sector Data (Geological Survey) licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) licence',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
@@ -450,8 +454,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '1',
-                credit : 'GSI \u00A9',
-
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
@@ -475,8 +477,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Bedrock/Bedrock100k_Seamless_2018/MapServer/WMSServer',
                 layers : '3',
-                credit : 'GSI \u00A9',
-
                 parameters : {
                     transparent : 'true',
                     format : 'image/png',
@@ -489,7 +489,6 @@ function setupLayers() {
             new Cesium.WebMapServiceImageryProvider({
                 url : 'https://secure.dccae.gov.ie/arcgis/services/Quaternary/QuaternaryGeomorphology/MapServer/WMSServer',
                 layers: 'Mountain Glaciation Trimlines,Mountain Glaciation Corries,Deglacial Landforms,Meltwater Landforms,Subglacial Moraines,Subglacial Lineations,Subglacial Striae,Errattic Carriage Source,Erratic Carriage Sink,ICE-MARGINAL LANDFORMS,SUBGLACIAL LANDFORMS',
-                credit : 'GSI \u00A9',
 //proxy: new Cesium.DefaultProxy('/proxy/'),
                 parameters : {
                     transparent : 'true',
